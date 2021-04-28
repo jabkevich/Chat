@@ -4,51 +4,35 @@ import {connect} from 'react-redux'
 import openSocket from "socket.io-client"
 import {socket} from "../../socket"
 import styles from "./styles.scss"
+import {joinRoom, sendMessage, leaveRoom, getMessages, getUsersInChat, getNewMessage} from "../../redux/chat/chatActions";
+
 export class Room extends Component {
     constructor(props) {
         super(props);
-        this.Back = this.Back.bind(this)
     }
     state = {
+        room: new URLSearchParams(this.props.location.search).get("room"),
         message: '',
-        socket: socket
     }
     onChange = e => this.setState({[e.target.name]: e.target.value})
 
 
     componentDidMount() {
-        console.log(new URLSearchParams(this.props.location.search).get("room"))
-        let room = new URLSearchParams(this.props.location.search).get("room")
-
-        // const socket = openSocket("http://localhost:6600");
-        this.state.socket.emit("open_room", {room: room, username: this.props.username});
-        this.state.socket.on("open_room", () => {
-          console.log("open_room")
-        })
-        this.state.socket.on("new_message", (data) => {
-            console.log(data)
-        })
+        this.props.joinRoom(this.state.room, this.props.username)
+        this.props.getMessages(this.state.room)
+        this.props.getNewMessage()
         window.addEventListener('popstate', (event) => {
-            this.state.socket.emit("close_room", {room: room, username: this.props.username});
+            this.props.leaveRoom(this.state.room, this.props.username)
         });
     }
     handleSubmit = e => {
         e.preventDefault();
-        const data = {
-            room:new URLSearchParams(this.props.location.search).get("room"),
-            message:  this.state.message,
-            username: this.props.username
-        }
-        this.state.socket.emit("new_message", data);
+        console.log("kavooooo")
+        this.props.sendMessage(this.state.message, this.state.room, this.props.username)
     };
-    Back(){
-        let room = new URLSearchParams(this.props.location.search).get("room")
-        this.state.socket.emit("close_room", {room: room, username: this.props.username})
-        return <Redirect to={"/"}/>
-    }
 
     render() {
-        const {message} = this.state
+        const message = this.state.message
             return (
                 <div className={styles.Room}>
                     <div className={styles.Users}>
@@ -79,4 +63,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, null)(Room)
+export default connect(mapStateToProps,  {joinRoom, sendMessage, leaveRoom, getMessages, getUsersInChat, getNewMessage})(Room)

@@ -6,12 +6,13 @@ var io = require("socket.io")(http,{
     }
 });
 
-const port = 6900;
+const port = 7000;
 
 
 let usersRooms = []
 let users = []
 let rooms = {}
+let messages = []
 
 const getVisitors = () => {
     return users;
@@ -42,18 +43,23 @@ io.on("connection", function(socket) {
         usersRooms = [...usersRooms, data]
         io.emit("get_rooms", usersRooms);
     })
-    socket.on("open_room", data=>{
+    socket.on("join_room", data=>{
         console.log(socket.id)
         if(!rooms[data.room])
             rooms[data.room] = [data.username]
         else
             rooms[data.room] = [...rooms[data.room], data.username]
         socket.join(data.room);
-        io.to(data.room).emit("open_room")
+        io.to(data.room).emit("join_room", {username:data.room, username: data.username})
     })
 
-    socket.on("new_message", data =>{
-        io.to(data.room).emit("new_message", {message: data.message, username: data.usernmae})
+    socket.on("send_message", data =>{
+        messages = [...messages, data]
+        io.to(data.room).emit("get_new_message", {message: data.message, room: data.room, username: data.username})
+    })
+    socket.on("get_messages", data=>{
+        console.log("hm")
+        io.to(data.room).emit("get_messages", messages)
     })
 
     socket.on("get_rooms", ()=>{

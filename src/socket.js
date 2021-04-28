@@ -2,5 +2,5 @@ import openSocket from "socket.io-client";
 
 
 
-export const socket = openSocket("http://localhost:6900");
+export const socket = openSocket("http://localhost:7000");
 
