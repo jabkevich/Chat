@@ -1,10 +1,8 @@
 import React, {Component} from "react";
 import {Link, Redirect, Route} from "react-router-dom";
 import {connect} from 'react-redux'
-import PropTypes from "prop-types";
 import {login} from '../../redux/auth/authActions'
-
-
+import styles from "./styles.scss"
 export class Login extends Component {
     state = {
         username: ''
@@ -22,18 +20,20 @@ export class Login extends Component {
             return <Redirect to='/'/>
         }
         return (
-            <div className={"AuthContainer"}>
-                <div className={"Auth"}>
-                    <div className={"Login"}>
-                        <h3>chat</h3>
-                        <form className="form post" onSubmit={this.handleSubmit}>
-                            <div id="account-name">
-                                <input type="text" name={"username"} placeholder={"Введите ваш логин"}
-                                       onChange={this.onChange} value={username} required/>
-                            </div>
-                            <button type="submit" className="effect effect-3" title="Learn More">Войти</button>
+            <div className={styles.AuthContainer}>
+                <div className={styles.container}>
+                        <form  onSubmit={this.handleSubmit}>
+                            <ul  className={styles.Login}>
+                                <li>
+                                    <label id="label" htmlFor="username">Your username</label>
+                                        <input id="username" type="text" name={"username"} placeholder={"your username"} onChange={this.onChange} value={username} required/>
+                                </li>
+                                <li>
+                                    <button type="submit">log in</button>
+                                </li>
+                            </ul>
+
                         </form>
-                    </div>
                 </div>
             </div>
         )

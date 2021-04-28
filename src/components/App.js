@@ -4,6 +4,7 @@ import PrivateRoute from "./common/PrivateRoute";
 import Login from "./login/Login"
 import Rooms from "./rooms/Rooms"
 import Room from "./Room/Room";
+import "./App.scss"
 class App extends Component {
 
     render() {

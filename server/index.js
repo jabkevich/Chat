@@ -6,11 +6,12 @@ var io = require("socket.io")(http,{
     }
 });
 
-const port = 6600;
+const port = 6900;
 
 
-let rooms = []
+let usersRooms = []
 let users = []
+let rooms = {}
 
 const getVisitors = () => {
     return users;
@@ -24,32 +25,31 @@ io.on("connection", function(socket) {
     console.log("a user connected");
 
     socket.on("new_user", user => {
-        console.log("new_visitor", user);
-        console.log(socket.id)
-        users = [...users, user];
+        users = [...users, {username: user, socketId: socket.id}];
         io.emit("helloNewUser", user);
     });
 
     socket.on("get_users", ()=> {
-        console.log("get users")
+        console.log(socket.id)
         io.emit("get_users", users);
     });
     socket.on("disconnect", function() {
-        emitVisitors();
-        console.log(socket.id)
+        socket.disconnect()
         console.log("user disconnected");
     });
 
     socket.on("new_room", (data)=>{
-        rooms = [...rooms, data]
-        console.log(data.name)
-        console.log("get users")
-        // socket.join(data.name);
-        io.emit("get_rooms", rooms);
+        usersRooms = [...usersRooms, data]
+        io.emit("get_rooms", usersRooms);
     })
     socket.on("open_room", data=>{
-        socket.join(data);
-        io.to(data).emit("open_room")
+        console.log(socket.id)
+        if(!rooms[data.room])
+            rooms[data.room] = [data.username]
+        else
+            rooms[data.room] = [...rooms[data.room], data.username]
+        socket.join(data.room);
+        io.to(data.room).emit("open_room")
     })
 
     socket.on("new_message", data =>{
@@ -57,8 +57,11 @@ io.on("connection", function(socket) {
     })
 
     socket.on("get_rooms", ()=>{
-        console.log("get_rooms")
-        io.emit("get_rooms", rooms);
+        io.emit("get_rooms", usersRooms);
+    })
+    socket.on("close_room", (data)=>{
+        console.log("close_room")
+        socket.leave(data.room)
     })
 });
 

@@ -7,7 +7,7 @@ import {logout} from '../../redux/auth/authActions'
 import {getUsers} from "../../redux/users/usersActions";
 import AllRooms from "./AllRooms";
 import Users from "./Users";
-
+import styles from "./styles.scss";
 
 export class Rooms extends Component {
     state = {
@@ -33,18 +33,31 @@ export class Rooms extends Component {
         }
         const {roomName} = this.state
         return (
-            <div className={"Room"}>
-                <h1>Hello {this.props.username}</h1>
-                <form className={"logout"} onSubmit={this.handleSubmit}>
-                    <button type="submit">Logout</button>
-                </form>
-                <form className={"addRooms"} onSubmit={this.addRoom}>
-                    <input type="text" name={"roomName"} placeholder={"room name"}
-                           onChange={this.onChange} value={roomName} required/>
-                    <button type="addRooms">добавить комнату</button>
-                </form>
-                <AllRooms/>
-                <Users/>
+            <div className={styles.Room}>
+                <div className={styles.Header}>
+                    <h1>Hello {this.props.username}</h1>
+                    <form className={"logout"} onSubmit={this.handleSubmit}>
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>
+                <div className={styles.Content}>
+                    <Users/>
+                    <AllRooms/>
+                    <div className={styles.addRooms}>
+                        <form  onSubmit={this.addRoom}>
+                            <ul  className={styles.Rooms}>
+                                <li>
+                                    <label id="label" htmlFor="roomName">Комната</label>
+                                    <input type="text" id="roomName" name={"roomName"} placeholder={"room name"}
+                                           onChange={this.onChange} value={roomName} required/>
+                                </li>
+                                <li>
+                                    <button type="submit">добавить комнату</button>
+                                </li>
+                            </ul>
+                        </form>
+                    </div>
+                </div>
             </div>
         )
     }

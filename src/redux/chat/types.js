@@ -1,0 +1,5 @@
+export const GET_USERS_IN_CHAT = "GET_USERS_IN_CHAT"
+export const GET_MESSAGES = "GET_MESSAGES"
+export const SEND_MESSAGE = "ADD_MESSAGE"
+export const JOIN_ROOM = "JOIN_ROOM"
+export const LEAVE_ROOM = "LEAVE_ROOM"

@@ -3,7 +3,7 @@ import {Link, Redirect, Route} from "react-router-dom";
 import {connect} from 'react-redux'
 import PropTypes from "prop-types";
 import {getRooms} from '../../redux/rooms/roomsActions'
-
+import styles from "./styles.scss"
 
 export class AllRooms extends Component {
 
@@ -14,15 +14,18 @@ export class AllRooms extends Component {
     render() {
         if (this.props.rooms.length > 0) {
             return (
-                <div className={"Room"}>
+                <div className={styles.RoomList}>
                     {this.props.rooms.map((room, i) => (
-                        <Link to={`/room/room/?room=${room.name}`} key={i}>{room.username} создал комнату {room.name}</Link>
+                        <div key={i} className={styles.RoomLink}>
+                            <Link to={`/room/room/?room=${room.name}`} >{room.name}</Link>
+                            <div className={styles.RoomOwner} data-title={` . id: ${room.username}`}>owner: {room.username}</div>
+                        </div>
                     ))}
                 </div>
             )
         } else {
             return (
-                <div className={"Room"}>
+                <div className={styles.RoomList}>
                     комнат нет
                 </div>
             )
