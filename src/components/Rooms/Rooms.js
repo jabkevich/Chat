@@ -8,8 +8,14 @@ import {getUsers} from "../../redux/users/usersActions";
 import AllRooms from "./AllRooms";
 import Users from "./Users";
 import styles from "./styles.scss";
+import {socket} from "../../socket";
+import {GET_ROOMS} from "../../redux/rooms/types";
 
 export class Rooms extends Component {
+    constructor(props) {
+        super(props);
+
+    }
     state = {
         roomName: ''
     }
@@ -23,12 +29,14 @@ export class Rooms extends Component {
         e.preventDefault()
         this.props.addRoom(this.state.roomName, this.props.username)
     }
+
+
     componentDidMount() {
+
     }
 
     render() {
         if (!this.props.isAuthenticated) {
-            console.log("h")
             return <Redirect push to='/'/>
         }
         const {roomName} = this.state

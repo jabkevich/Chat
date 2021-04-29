@@ -12,3 +12,8 @@ export const getUsers = () =>dispatch=>{
         })
     })
 }
+
+
+export const getUsersOff = () =>dispatch=>{
+    socket.on("getUsersFoo")
+}

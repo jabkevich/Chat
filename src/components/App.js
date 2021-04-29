@@ -1,10 +1,13 @@
 import React, {Component, Fragment} from 'react'
-import {HashRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import {HashRouter as Router, Route, Switch, Redirect, BrowserRouter} from "react-router-dom";
 import PrivateRoute from "./common/PrivateRoute";
 import Login from "./login/Login"
 import Rooms from "./rooms/Rooms"
 import Room from "./Room/Room";
 import "./App.scss"
+
+import {connect} from "react-redux";
+
 class App extends Component {
 
     render() {
@@ -12,9 +15,10 @@ class App extends Component {
             <Router>
                 <Switch>
                     <PrivateRoute exact path={"/"}/>
-                    <Route exact path={"/login"} component={Login}/>
-                    <Route exact path={"/rooms"} component={Rooms}/>
-                    <Route exact path={"/room/:room?"} component={Room}/>
+                    {/*render={() => <AddPermissionView {...this.props}/>}*/}
+                    <Route  path={"/login"}  component={Login}/>
+                    <Route  path={"/rooms"}component={Rooms}/>
+                    <Route  path={"/room/:room?"}  component={Room}/>
                 </Switch>
             </Router>
         )

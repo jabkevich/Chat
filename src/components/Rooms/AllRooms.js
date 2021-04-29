@@ -2,13 +2,17 @@ import React, {Component} from "react";
 import {Link, Redirect, Route} from "react-router-dom";
 import {connect} from 'react-redux'
 import PropTypes from "prop-types";
-import {getRooms} from '../../redux/rooms/roomsActions'
+import {getRooms, getRoomsOff} from '../../redux/rooms/roomsActions'
 import styles from "./styles.scss"
 
 export class AllRooms extends Component {
 
     componentDidMount() {
         this.props.getRooms()
+    }
+
+    componentWillUnmount() {
+        this.props.getRoomsOff()
     }
 
     render() {
@@ -40,4 +44,4 @@ const mapStateToProps = state => {
     }
 }
 
-export default connect(mapStateToProps, {getRooms})(AllRooms)
+export default connect(mapStateToProps, {getRooms, getRoomsOff})(AllRooms)

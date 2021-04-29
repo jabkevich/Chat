@@ -25,33 +25,36 @@ export class Room extends Component {
             this.props.leaveRoom(this.state.room, this.props.username)
         });
     }
+    componentWillUnmount() {
+        window.removeEventListener('progress', ev => {})
+    }
+
     handleSubmit = e => {
         e.preventDefault();
-        console.log("kavooooo")
         this.props.sendMessage(this.state.message, this.state.room, this.props.username)
     };
 
     render() {
         const message = this.state.message
-            return (
-                <div className={styles.Room}>
-                    <div className={styles.Users}>
-                        ты один
-                    </div>
-                    <div className={styles.Chat}>
-                        <div className={styles.Messages}>
-                            Messages
-                        </div>
-                        <form className={styles.Form} onSubmit={this.handleSubmit}>
-                            <div>
-                                <input  type="text" name={"message"} placeholder={"введите сообщения"}
-                                        onChange={this.onChange} value={message} required/>
-                                <button type={"submit"}>отправить</button>
-                            </div>
-                        </form>
-                    </div>
+        return (
+            <div className={styles.Room}>
+                <div className={styles.Users}>
+                    ты один
                 </div>
-            )
+                <div className={styles.Chat}>
+                    <div className={styles.Messages}>
+                        Messages
+                    </div>
+                    <form className={styles.Form} onSubmit={this.handleSubmit}>
+                        <div>
+                            <input  type="text" name={"message"} placeholder={"введите сообщения"}
+                                    onChange={this.onChange} value={message} required/>
+                            <button type={"submit"}>отправить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        )
 
     }
 }

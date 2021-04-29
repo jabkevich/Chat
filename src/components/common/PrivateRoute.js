@@ -14,6 +14,7 @@ const PrivateRoute = (auth) => (
                 return <h2>Loadin...</h2>
             } else
             if (!auth.isAuthenticated){
+
                 console.log("2")
                 return <Redirect to={"/login"}/>
             } else if (auth.isAuthenticated && auth.tryedLogin){

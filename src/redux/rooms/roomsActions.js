@@ -19,3 +19,8 @@ export const getRooms = () =>dispatch => {
         })
     })
 }
+
+export const getRoomsOff = () =>dispatch => {
+    socket.off("get_rooms")
+}
+
