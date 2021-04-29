@@ -1,11 +1,12 @@
 import React, {Component} from "react";
 import {Link, Redirect, Route} from "react-router-dom";
 import {connect} from 'react-redux'
-import {login} from '../../redux/auth/authActions'
+import {login, loginOff} from '../../redux/auth/authActions'
 import styles from "./styles.scss"
 export class Login extends Component {
     state = {
-        username: ''
+        username: '',
+        room: new URLSearchParams(this.props.location.search).get("room"),
     }
     onChange = e => this.setState({[e.target.name]: e.target.value})
 
@@ -14,9 +15,16 @@ export class Login extends Component {
         this.props.login(this.state.username)
     };
 
+    componentWillUnmount() {
+        this.props.loginOff()
+    }
+
     render() {
         const {username} = this.state
         if (this.props.isAuthenticated) {
+            if(this.state.room){
+                return <Redirect to={'/room/?room='+this.state.room}/>
+            }
             return <Redirect to='/'/>
         }
         return (
@@ -42,8 +50,9 @@ export class Login extends Component {
 
 const mapStateToProps = state => {
     return {
-        isAuthenticated: state.auth.isAuthenticated
+        isAuthenticated: state.auth.isAuthenticated,
+        tryedLogin: state.auth.tryedLogin,
     }
 }
 
-export default connect(mapStateToProps, {login})(Login)
+export default connect(mapStateToProps, {login, loginOff})(Login)

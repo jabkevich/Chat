@@ -3,32 +3,34 @@ import {socket} from "../../socket"
 
 
 export const login = (username) => dispatch =>{
+    console.log()
     sessionStorage.setItem('username', username);
     socket.emit("new_user", username);
     socket.on("helloNewUser", visitors => {
-        console.log((visitors))
-        username = visitors
+        sessionStorage.setItem('socket', socket.id);
+        console.log(socket.id)
+        dispatch({
+            type: LOGIN_USER,
+            payload: visitors
+        })
     })
-    dispatch({
-        type: LOGIN_USER,
-        payload: username
-    })
+
 }
 
 export const tryLogin = () => dispatch =>{
+    console.log( sessionStorage.getItem('username'))
     let username = sessionStorage.getItem('username');
     if(username)
     {
         socket.emit("new_user", username);
         socket.on("helloNewUser", visitors => {
-            console.log((visitors))
-            username = visitors
+            dispatch({
+                type: TRY_LOAD_USER,
+                payload: visitors
+            })
         })
-        dispatch({
-        type: TRY_LOAD_USER,
-        payload: username
-    })}
 
+    }
     else{
         dispatch({
             type: LOGIN_INDALID,
@@ -36,8 +38,15 @@ export const tryLogin = () => dispatch =>{
     }
 }
 
-export const logout = () => dispatch =>{
+export const loginOff = () =>dispatch =>{
+    socket.off("helloNewUser")
+}
+
+export const logout = (socketId) => dispatch =>{
+    socket.disconnect()
     dispatch({
         type: LOGOUT_USER,
     })
+    sessionStorage.removeItem('username');
+    location.reload()
 }

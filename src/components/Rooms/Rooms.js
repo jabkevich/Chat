@@ -23,11 +23,11 @@ export class Rooms extends Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        this.props.logout()
+        this.props.logout(this.props.user.socketId)
     };
     addRoom = e =>{
         e.preventDefault()
-        this.props.addRoom(this.state.roomName, this.props.username)
+        this.props.addRoom(this.state.roomName, this.props.user,new Date().getTime()/1000)
     }
 
 
@@ -43,7 +43,7 @@ export class Rooms extends Component {
         return (
             <div className={styles.Room}>
                 <div className={styles.Header}>
-                    <h1>Hello {this.props.username}</h1>
+                    <h1>Hello {this.props.user.username}</h1>
                     <form className={"logout"} onSubmit={this.handleSubmit}>
                         <button type="submit">Logout</button>
                     </form>
@@ -73,7 +73,7 @@ export class Rooms extends Component {
 
 const mapStateToProps = state => {
     return {
-        username: state.auth.username,
+        user: state.auth.user,
         isAuthenticated: state.auth.isAuthenticated,
     }
 }

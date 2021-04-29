@@ -8,16 +8,12 @@ const PrivateRoute = (auth) => (
     <Route
 
         render={props => {
-            if(!auth.tryedLogin){
-                console.log("1")
-                auth.tryLogin()
-                return <h2>Loadin...</h2>
-            } else
-            if (!auth.isAuthenticated){
 
+            if (!auth.isAuthenticated){
+                auth.tryLogin()
                 console.log("2")
                 return <Redirect to={"/login"}/>
-            } else if (auth.isAuthenticated && auth.tryedLogin){
+            } else if (auth.isAuthenticated){
                 console.log("3")
                 return <Redirect to={"/rooms"}/>
             }

@@ -4,9 +4,9 @@
   width: 100%;
 
   background-color: #583d72;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .Users, .Chat{
@@ -67,4 +67,37 @@
 
 
   }
+}
+
+
+
+.Header{
+  width: 100%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: #ffc996;
+  color:#f2f2f2;
+  a{
+    text-decoration: none;
+    margin-left: auto;
+    padding: 8px 16px;
+    border: none;
+    background: #583d72;
+    color: #f2f2f2;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    border-radius: 2px;
+  }
+}
+
+.Content{
+  display: flex;
+  height: 80%;
+  width: 100%;
+
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: row;
 }

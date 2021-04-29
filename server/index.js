@@ -9,9 +9,9 @@ var io = require("socket.io")(http,{
 const port = 7000;
 
 
-let usersRooms = []
+let room = []
 let users = []
-let rooms = {}
+let rooms = []
 let messages = []
 
 const getVisitors = () => {
@@ -23,37 +23,48 @@ const emitVisitors = () => {
 };
 
 io.on("connection", function(socket) {
-    console.log("a user connected");
 
     socket.on("new_user", user => {
         users = [...users, {username: user, socketId: socket.id}];
-        console.log("newUSer")
-        io.emit("helloNewUser", user);
+        io.emit("helloNewUser", {username: user, socketId: socket.id});
+    });
+    socket.on("disconnect", function() {
+        // let disUser
+        // console.log("--------------------")
+        // console.log(users)
+        users = users.filter(user=> {
+            if(user.socketId !== socket.id)
+                disUser = user.socketId
+            return user.socketId !== socket.id
+        })
+        // console.log(disUser)
+        // console.log(room)
+        // if(room){
+        //    room.filter(user =>{
+        //        if(user.socketId === disUser){
+        //            disUser = user.socketId
+        //        }
+        //    })
+        // }
+        // console.log(disUser)
+
+        io.emit("get_users", users);
+        socket.disconnect()
     });
 
     socket.on("get_users", ()=> {
-        console.log(socket.id)
-        console.log("get_users")
         io.emit("get_users", users);
-    });
-    socket.on("disconnect", function() {
-        socket.disconnect()
-        console.log("user disconnected");
     });
 
     socket.on("new_room", (data)=>{
-        usersRooms = [...usersRooms, data]
-        io.emit("get_rooms", usersRooms);
+        rooms = [...rooms, data]
+        io.emit("get_rooms", rooms);
     })
     socket.on("join_room", data=>{
-        console.log(socket.id)
-        if(!rooms[data.room])
-            rooms[data.room] = [data.username]
-        else
-            rooms[data.room] = [...rooms[data.room], data.username]
-        console.log("Join")
+        console.log("join_room")
+        room = [...room, {room: data.room, user: data.user}]
         socket.join(data.room);
-        io.to(data.room).emit("join_room", {username:data.room, username: data.username})
+        io.to(data.room).emit("join_room", {room:data.room, user: data.user})
     })
 
     socket.on("send_message", data =>{
@@ -61,18 +72,27 @@ io.on("connection", function(socket) {
         io.to(data.room).emit("get_new_message", {message: data.message, room: data.room, username: data.username})
     })
     socket.on("get_messages", data=>{
-        console.log("get_message")
         io.to(data.room).emit("get_messages", messages)
     })
 
     socket.on("get_rooms", ()=>{
-        console.log("get_rooms")
-        io.emit("get_rooms", usersRooms);
+        io.emit("get_rooms", rooms);
     })
     socket.on("leave_room", (data)=>{
-        console.log("close_room")
+        console.log("leave_room")
+        console.log(room)
+        console.log("--------------")
+        room = room.filter(user => user.socketId !== data.user.socketId)
+        console.log("--------------")
+        console.log(room)
+        io.to(data.room).emit("get_participants", room)
         socket.leave(data.room)
     })
+    socket.on("get_participants", chat=>{
+        io.to(chat).emit("get_participants", room)
+    })
+
+
 });
 
 http.listen(port, function() {

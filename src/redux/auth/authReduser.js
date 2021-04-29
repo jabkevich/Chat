@@ -1,7 +1,7 @@
 import {LOGIN_INDALID, LOGIN_USER, LOGOUT_USER, TRY_LOAD_USER} from "./types";
 
 const initialState = {
-    username: null,
+    user: null,
     isAuthenticated: false,
     tryedLogin: false
 }
@@ -11,14 +11,14 @@ export const authReducer = (state = initialState, action) => {
         case LOGIN_USER:
             return{
                 ...state,
-                username: action.payload,
+                user: action.payload,
                 isAuthenticated: true
             }
         case LOGIN_INDALID:
         case LOGOUT_USER:
             return{
                 ...state,
-                username: null,
+                user: null,
                 isAuthenticated: false,
                 tryedLogin: true
             }
@@ -26,7 +26,7 @@ export const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 tryedLogin: true,
-                username: action.payload,
+                user: action.payload,
                 isAuthenticated: true
             }
         default:

@@ -8,6 +8,7 @@ import styles from "./styles.scss"
 export class Users extends Component {
 
     componentDidMount() {
+        console.log("getUsers")
         this.props.getUsers()
     }
     componentWillUnmount() {

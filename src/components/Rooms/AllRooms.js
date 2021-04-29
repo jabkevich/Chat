@@ -21,8 +21,8 @@ export class AllRooms extends Component {
                 <div className={styles.RoomList}>
                     {this.props.rooms.map((room, i) => (
                         <div key={i} className={styles.RoomLink}>
-                            <Link to={`/room/room/?room=${room.name}`} >{room.name}</Link>
-                            <div className={styles.RoomOwner} data-title={` . id: ${room.username}`}>owner: {room.username}</div>
+                            <Link to={`/room/room/?room=${room.id}`} >{room.name}</Link>
+                            <div className={styles.RoomOwner}>owner: {room.user.username}</div>
                         </div>
                     ))}
                 </div>
