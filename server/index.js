@@ -29,24 +29,22 @@ io.on("connection", function(socket) {
         io.emit("helloNewUser", {username: user, socketId: socket.id});
     });
     socket.on("disconnect", function() {
-        // let disUser
-        // console.log("--------------------")
-        // console.log(users)
+        console.log("disconect")
+        console.log(users)
+        console.log(room)
         users = users.filter(user=> {
             if(user.socketId !== socket.id)
                 disUser = user.socketId
             return user.socketId !== socket.id
         })
-        // console.log(disUser)
-        // console.log(room)
-        // if(room){
-        //    room.filter(user =>{
-        //        if(user.socketId === disUser){
-        //            disUser = user.socketId
-        //        }
-        //    })
-        // }
-        // console.log(disUser)
+        room = room.filter(user => {
+            console.log(user.socketId)
+            if(user.user.socketId === socket.id){
+                io.to(user.room).emit("get_participants", room)
+
+            }
+            return user.user.socketId !== socket.id
+        })
 
         io.emit("get_users", users);
         socket.disconnect()
@@ -72,7 +70,13 @@ io.on("connection", function(socket) {
         io.to(data.room).emit("get_new_message", {message: data.message, room: data.room, username: data.username})
     })
     socket.on("get_messages", data=>{
-        io.to(data.room).emit("get_messages", messages)
+        console.log("get_messages")
+        console.log(messages)
+        console.log(data)
+        const getmessages = messages.filter(message =>{
+            return message.room ===data.room
+        })
+        io.to(data.room).emit("get_messages", getmessages)
     })
 
     socket.on("get_rooms", ()=>{
@@ -82,14 +86,25 @@ io.on("connection", function(socket) {
         console.log("leave_room")
         console.log(room)
         console.log("--------------")
-        room = room.filter(user => user.socketId !== data.user.socketId)
+        console.log(data.user.socketId)
+        room = room.filter(user => {
+            console.log(user.socketId)
+            return user.user.socketId !== data.user.socketId
+        })
         console.log("--------------")
         console.log(room)
         io.to(data.room).emit("get_participants", room)
         socket.leave(data.room)
     })
     socket.on("get_participants", chat=>{
-        io.to(chat).emit("get_participants", room)
+        console.log(chat)
+        console.log(room)
+        const getRoom = room.filter(room =>{
+            console.log(room)
+            console.log(chat)
+            return room.room ===chat
+        })
+        io.to(chat).emit("get_participants", getRoom)
     })
 
 

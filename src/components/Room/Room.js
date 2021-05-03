@@ -21,9 +21,6 @@ export class Room extends Component {
     componentDidMount() {
         console.log("загрузка")
         if(this.props.isAuthenticated){
-            console.log("this.props.user")
-            console.log(this.props.user)
-            console.log(this.props.usersInChat)
             this.props.joinRoom(this.state.room, this.props.user)
             this.props.getMessages(this.state.room)
             this.props.getNewMessage()

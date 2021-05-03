@@ -8,7 +8,6 @@ import {socket} from "../../socket"
 export const joinRoom = (room, user) =>dispatch=>{
     console.log(user)
     socket.emit("join_room", {room, user})
-
 }
 export const sendMessage = (message, room, username)=>dispatch=>{
     socket.emit("send_message", ({message: message, room: room, username:username}))
