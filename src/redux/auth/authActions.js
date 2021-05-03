@@ -3,17 +3,8 @@ import {socket} from "../../socket"
 
 
 export const login = (username) => dispatch =>{
-    console.log()
     sessionStorage.setItem('username', username);
-    socket.emit("new_user", username);
-    socket.on("helloNewUser", visitors => {
-        sessionStorage.setItem('socket', socket.id);
-        console.log(socket.id)
-        dispatch({
-            type: LOGIN_USER,
-            payload: visitors
-        })
-    })
+    socket.emit("login", username)
 
 }
 
@@ -22,8 +13,8 @@ export const tryLogin = () => dispatch =>{
     let username = sessionStorage.getItem('username');
     if(username)
     {
-        socket.emit("new_user", username);
-        socket.on("helloNewUser", visitors => {
+        socket.emit("login", username);
+        socket.on("login", visitors => {
             dispatch({
                 type: TRY_LOAD_USER,
                 payload: visitors
@@ -37,15 +28,23 @@ export const tryLogin = () => dispatch =>{
         })
     }
 }
+export const on =()=>dispatch=>{
+    socket.on("login", data=>{
+        dispatch({
+            type: LOGIN_USER,
+            payload: data
+        })
+    })
+}
 
-export const loginOff = () =>dispatch =>{
-    socket.off("helloNewUser")
+export const off =()=>dispatch=>{
+        socket.off("login")
 }
 
 export const logout = (socketId) => dispatch =>{
     socket.disconnect()
     dispatch({
-        type: LOGOUT_USER,
+        type: LOGOUT_USER
     })
     sessionStorage.removeItem('username');
     location.reload()

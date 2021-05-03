@@ -29,15 +29,15 @@ export const chatReducer = (state = initialState, action) =>{
                 messages: [...state.messages, action.payload]
             }
         case JOIN_ROOM:
+            console.log(action.payload)
             return {
                 ...state,
-                messages: [...state.messages, action.payload]
+                usersInChat: [...state.usersInChat, action.payload]
             }
         case LEAVE_ROOM:
             return {
                 ...state,
-                usersInChat: [],
-                messages: []
+                usersInChat:  action.usersInChat.filter(userInChat=>userInChat.socketId !== action.payload.socketId)
             }
         default:
             return state

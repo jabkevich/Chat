@@ -1,13 +1,27 @@
 import {GET_MESSAGES, GET_USERS_IN_CHAT, SEND_MESSAGE, JOIN_ROOM, LEAVE_ROOM, GET_NEW_MESSAGE} from "./types"
-import openSocket from "socket.io-client";
 
 import {socket} from "../../socket"
-// export const socket = openSocket("http://localhost:7000");
 
 
 export const joinRoom = (room, user) =>dispatch=>{
     console.log(user)
     socket.emit("join_room", {room, user})
+}
+
+
+export const onChat=()=>dispatch=>{
+    socket.on("join_room", data=>{
+        dispatch({
+            type: JOIN_ROOM,
+            payload: data
+        })
+    })
+    socket.on("leave_room", user=>{
+        dispatch({
+            type: LEAVE_ROOM,
+            payload: user
+        })
+    })
 }
 export const sendMessage = (message, room, username)=>dispatch=>{
     socket.emit("send_message", ({message: message, room: room, username:username}))
@@ -51,10 +65,12 @@ export const getParticipants = (room) => dispatch =>{
 
 
 export const leaveRoom = (room, user)=>dispatch=>{
+    console.log("leave")
     socket.emit("leave_room", {room: room, user: user})
     socket.off("get_messages")
     socket.off("get_new_message")
     socket.off("get_users")
+    socket.off("join_room")
 }
 
 
@@ -64,6 +80,12 @@ export const getUsersInChat = (room) => dispatch=>{
         dispatch({
             type: GET_USERS_IN_CHAT,
             payload: users
+        })
+    })
+    socket.on("leave_room", user=>{
+        dispatch({
+            type: LEAVE_ROOM,
+            payload: user
         })
     })
 }
