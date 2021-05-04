@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Link, Redirect, Route} from "react-router-dom";
 import {connect} from "react-redux";
-import {joinRoom,leaveRoom, onChat} from "../../../redux/chat/chatActions"
+import {joinRoom,leaveRoom, onChat, sendMessage} from "../../../redux/chat/chatActions"
 import  styles from "../styles/styles.scss"
 import { withRouter} from 'react-router-dom';
 
@@ -9,12 +9,14 @@ export class Room extends Component {
     constructor(props) {
 
         super(props);
-        this.componentDidRerender = this.componentDidRerender.bind(this)
+
     }
     state = {
-        room:this.props.match.params.room,
-        message: this.props.match.params.room,
+        room: this.props.match.params.room,
+        message: "",
     }
+    onChange = e => this.setState({[e.target.name]: e.target.value})
+
     componentDidMount() {
         console.log(this.props.match.params.room)
         this.props.joinRoom(this.props.match.params.room, this.props.user)
@@ -25,22 +27,32 @@ export class Room extends Component {
     }
 
 
-    componentDidRerender(room){
-        console.log(this.state.room, this.props.user.username)
-
-        this.props.onChat()
-    }
-
-
-
-
+    handleSubmit = e => {
+        e.preventDefault();
+        this.props.sendMessage(this.state.message, this.state.room, this.props.user)
+    };
 
     render() {
-        const {roomName} = this.state
+        const {roomName, message} = this.state
         return (
             <div >
-                комната:
-                {this.state.room}
+                комната:{this.state.room}
+                <div>
+                    {
+                        this.state.room in this.props.messages ?
+                            this.props.messages[this.state.room].map((message, i) => (
+                                <div key={i}>{message.user.username}: {message.message}</div>
+                            )) : <div>{ this.state.room in this.props.messages}</div>
+                    }
+                </div>
+
+                <form className={styles.Form} onSubmit={this.handleSubmit}>
+                    <div>
+                        <input  type="text" name={"message"} placeholder={"введите сообщения"}
+                                onChange={this.onChange} value={message} required/>
+                        <button type={"submit"}>отправить</button>
+                    </div>
+                </form>
             </div>
         )
 
@@ -48,9 +60,10 @@ export class Room extends Component {
 }
 const mapStateToProps = state=>{
     return{
-        user: state.auth.user
+        user: state.auth.user,
+        messages: state.chats.messages
     }
 }
 
 
-export default withRouter(connect(mapStateToProps, {joinRoom,leaveRoom,onChat})(Room))
+export default withRouter(connect(mapStateToProps, {joinRoom,leaveRoom,onChat, sendMessage})(Room))

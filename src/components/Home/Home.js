@@ -7,9 +7,6 @@ import Menu from "./Menu/Menu";
 import Room from "./MainScreen/Room"
 import Change from "./MainScreen/Change";
 export class Home extends Component {
-
-
-
     render() {
         if (!this.props.isAuthenticated) {
             return <Redirect push to='/'/>

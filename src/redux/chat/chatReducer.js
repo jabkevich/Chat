@@ -2,7 +2,7 @@ import {GET_MESSAGES, GET_USERS_IN_CHAT, SEND_MESSAGE, JOIN_ROOM, LEAVE_ROOM, GE
 
 const initialState = {
     usersInChat: [],
-    messages: []
+    messages: {}
 }
 
 
@@ -13,20 +13,17 @@ export const chatReducer = (state = initialState, action) =>{
                 ...state,
                 usersInChat: action.payload
             }
-        case GET_MESSAGES:
-            return {
-                ...state,
-                messages: action.payload
-            }
         case SEND_MESSAGE:
-            return {
-                ...state,
-                messages: [...state.messages, action.payload]
+            let newMessages = state.messages
+            if( action.payload.room in newMessages)
+                newMessages[action.payload.room].push(action.payload.message)
+            else{
+                newMessages[action.payload.room] = []
+                newMessages[action.payload.room].push(action.payload.message)
             }
-        case GET_NEW_MESSAGE:
             return {
                 ...state,
-                messages: [...state.messages, action.payload]
+                messages: {...action, ...newMessages}
             }
         case JOIN_ROOM:
             console.log(action.payload)
@@ -37,7 +34,7 @@ export const chatReducer = (state = initialState, action) =>{
         case LEAVE_ROOM:
             return {
                 ...state,
-                usersInChat:  action.usersInChat.filter(userInChat=>userInChat.socketId !== action.payload.socketId)
+                usersInChat:  state.usersInChat.filter(userInChat=>userInChat.socketId !== action.payload.socketId)
             }
         default:
             return state

@@ -8,5 +8,5 @@ export const rootReducer = combineReducers({
     auth: authReducer,
     rooms:roomsReducer,
     users: usersReducer,
-    chat: chatReducer
+    chats: chatReducer
 })

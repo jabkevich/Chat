@@ -22,25 +22,28 @@ export const onChat=()=>dispatch=>{
             payload: user
         })
     })
-}
-export const sendMessage = (message, room, username)=>dispatch=>{
-    socket.emit("send_message", ({message: message, room: room, username:username}))
-    socket.on("get_message",(message)=>{
+    socket.on("send_message",(message)=>{
         dispatch({
-            type: GET_NEW_MESSAGE,
-            payload: {message: message.message, room: room, username:username}
+            type: SEND_MESSAGE,
+            payload:message
         })
     })
-}
 
-export const getMessages = (room) => dispatch =>{
-    socket.emit("get_messages", {room})
     socket.on("get_messages", messages=>{
         dispatch({
             type: GET_MESSAGES,
             payload: messages
         })
     })
+
+
+}
+export const sendMessage = (message, room, user)=>dispatch=>{
+    socket.emit("send_message", ({message: message, room: room, user:user}))
+}
+
+export const getMessages = (room) => dispatch =>{
+    socket.emit("get_messages", {room})
 }
 
 export const getNewMessage = ()=>dispatch =>{
@@ -71,6 +74,7 @@ export const leaveRoom = (room, user)=>dispatch=>{
     socket.off("get_new_message")
     socket.off("get_users")
     socket.off("join_room")
+    socket.off("send_message")
 }
 
 

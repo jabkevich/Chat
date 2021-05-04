@@ -43,15 +43,15 @@ let chats = {}
 * stores the room id and messages
 * {
 *   "roomId":
-*   {
+*   [
 *       {
 *          "user": {"socketId": "", "username":""}
 *          "message": ""
 *       }
-*   }
+*   ]
 * }
 * */
-const messages = []
+let messages = {}
 
 
 io.on("connection", function(socket) {
@@ -77,16 +77,24 @@ io.on("connection", function(socket) {
         socket.join(data.room)
         console.log("join_room")
         console.log(data)
+        console.log( chats[data.room])
         io.to(data.room).emit("join_room", data)
     })
     socket.on("leave_room", (data)=>{
         console.log("leave_room")
-        console.log(chats)
-        console.log(data)
         delete chats[data.room]
-        console.log(chats)
         io.to(data.room).emit("leave_room", data.user)
         socket.leave(data.room)
+    })
+    socket.on("send_message", data=>{
+        if( data.room in messages){
+            messages[data.room].push({user: data.user, message: data.message})
+        }
+        else{
+            messages[data.room] = []
+            messages[data.room].push({user: data.user, message: data.message})
+        }
+        io.to(data.room).emit('send_message', {room: data.room, message: {user: data.user, message: data.message}})
     })
 
 });
