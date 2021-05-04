@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Link, Redirect, Route} from "react-router-dom";
 import {connect} from "react-redux";
-import {joinRoom,leaveRoom, onChat, sendMessage} from "../../../redux/chat/chatActions"
+import {joinRoom,leaveRoom, onChat, sendMessage, getMessages, exitGot} from "../../../redux/chat/chatActions"
 import  styles from "../styles/styles.scss"
 import { withRouter} from 'react-router-dom';
 
@@ -21,6 +21,7 @@ export class Room extends Component {
         console.log(this.props.match.params.room)
         this.props.joinRoom(this.props.match.params.room, this.props.user)
         this.props.onChat()
+        this.props.getMessages(this.state.room)
     }
     componentWillUnmount() {
         this.props.leaveRoom(this.state.room, this.props.user)
@@ -33,6 +34,9 @@ export class Room extends Component {
     };
 
     render() {
+        if(this.props.exist_room){
+            return <Redirect to={"/rooms/"}/>
+        }
         const {roomName, message} = this.state
         return (
             <div >
@@ -61,9 +65,10 @@ export class Room extends Component {
 const mapStateToProps = state=>{
     return{
         user: state.auth.user,
-        messages: state.chats.messages
+        messages: state.chats.messages,
+        exist_room: state.chats.exist_room
     }
 }
 
 
-export default withRouter(connect(mapStateToProps, {joinRoom,leaveRoom,onChat, sendMessage})(Room))
+export default withRouter(connect(mapStateToProps, {joinRoom,leaveRoom,onChat, sendMessage, getMessages, exitGot})(Room))

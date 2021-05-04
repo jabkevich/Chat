@@ -1,6 +1,7 @@
-import {GET_MESSAGES, GET_USERS_IN_CHAT, SEND_MESSAGE, JOIN_ROOM, LEAVE_ROOM, GET_NEW_MESSAGE} from "./types"
+import {GET_MESSAGES, GET_USERS_IN_CHAT, SEND_MESSAGE, JOIN_ROOM, LEAVE_ROOM, GET_NEW_MESSAGE, EXIT_GOT} from "./types"
 
 import {socket} from "../../socket"
+import {EXIST_ROOM} from "../rooms/types";
 
 
 export const joinRoom = (room, user) =>dispatch=>{
@@ -8,6 +9,11 @@ export const joinRoom = (room, user) =>dispatch=>{
     socket.emit("join_room", {room, user})
 }
 
+export const exitGot = () => dispatch =>{
+    dispatch({
+        type: EXIT_GOT,
+    })
+}
 
 export const onChat=()=>dispatch=>{
     socket.on("join_room", data=>{
@@ -35,6 +41,11 @@ export const onChat=()=>dispatch=>{
             payload: messages
         })
     })
+    socket.on("exist_room", ()=>{
+        dispatch({
+            type: EXIST_ROOM,
+        })
+    })
 
 
 }
@@ -43,7 +54,7 @@ export const sendMessage = (message, room, user)=>dispatch=>{
 }
 
 export const getMessages = (room) => dispatch =>{
-    socket.emit("get_messages", {room})
+    socket.emit("get_messages", room)
 }
 
 export const getNewMessage = ()=>dispatch =>{
@@ -75,6 +86,7 @@ export const leaveRoom = (room, user)=>dispatch=>{
     socket.off("get_users")
     socket.off("join_room")
     socket.off("send_message")
+    socket.off("exist_room")
 }
 
 

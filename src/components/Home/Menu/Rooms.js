@@ -17,14 +17,17 @@ export class Room extends Component {
     render() {
             return (
                 <div className={styles.Rooms}>
-                    {this.props.rooms.map((room, i)=>(
-                        <Link key = {i} to={{
-                            pathname: "/rooms/change/",
-                            propsSearch: `/rooms/${room.id}/`
-                        }}>
-                            {room.roomName}
-                        </Link>
-                    ))}
+                    {
+                        this.props.rooms.length >0 ?        this.props.rooms.map((room, i)=>(
+                            <Link key = {i} to={{
+                                pathname: "/rooms/change/",
+                                propsSearch: `/rooms/${room.id}/`
+                            }}>
+                                {room.roomName}
+                            </Link>
+                        )) : <div>комнат нет</div>
+
+                    }
                 </div>
             )
 

@@ -17,7 +17,7 @@ export class AddRoom extends Component {
         e.preventDefault()
         let id = this.props.user.username+(new Date().getTime()/1000)
         console.log(id)
-        this.props.addRoom(this.state.roomName, this.props.user.username,id )
+        this.props.addRoom(this.state.roomName, this.props.user,id )
     }
 
     render() {

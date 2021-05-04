@@ -74,11 +74,26 @@ io.on("connection", function(socket) {
     })
     socket.on("join_room", (data)=>{
         chats[data.room] +=  data
-        socket.join(data.room)
+
         console.log("join_room")
         console.log(data)
-        console.log( chats[data.room])
-        io.to(data.room).emit("join_room", data)
+        console.log(rooms)
+        let flag = false
+            rooms.filter(room => {
+            if (room.id === data.room){
+                flag = true
+            }
+        })
+        console.log(flag)
+        if(flag) {
+            socket.join(data.room)
+            io.to(data.room).emit("join_room", data)
+        }
+        else{
+            console.log("dada")
+            io.to(socket.id).emit("exist_room")
+        }
+
     })
     socket.on("leave_room", (data)=>{
         console.log("leave_room")
@@ -96,7 +111,10 @@ io.on("connection", function(socket) {
         }
         io.to(data.room).emit('send_message', {room: data.room, message: {user: data.user, message: data.message}})
     })
-
+    socket.on("get_messages", room=>{
+        if(room in messages)
+            io.to(room).emit('get_messages', {room: room, messages: messages[room]})
+    })
 });
 
 http.listen(port, function() {
