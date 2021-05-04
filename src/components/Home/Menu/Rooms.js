@@ -15,6 +15,7 @@ export class Room extends Component {
     }
 
     render() {
+
             return (
                 <div className={styles.Rooms}>
                     {
@@ -35,7 +36,7 @@ export class Room extends Component {
 }
 const mapStateToProps =state=>{
     return{
-        rooms: state.rooms.rooms
+        rooms: state.rooms.rooms,
     }
 }
 

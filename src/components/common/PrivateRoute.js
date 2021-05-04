@@ -6,7 +6,6 @@ import {tryLogin} from '../../redux/auth/authActions'
 const PrivateRoute = (auth) => (
 
     <Route
-
         render={props => {
             if (!auth.isAuthenticated){
                 auth.tryLogin()

@@ -6,9 +6,13 @@ import styles from "./styles.scss"
 
 
 export class Login extends Component {
+    constructor(props) {
+        super(props);
+    }
     state = {
         username: '',
         // room: new URLSearchParams(this.props.location.search).get("room"),
+        room:this.props.location.room
     }
     onChange = e => this.setState({[e.target.name]: e.target.value})
 
@@ -27,9 +31,10 @@ export class Login extends Component {
     render() {
         const {username} = this.state
         if (this.props.isAuthenticated) {
-            // if(this.state.room){
-            //     return <Redirect to={'/room/?room='+this.state.room}/>
-            // }
+            console.log(this.state.room)
+            if(this.state.room !==undefined){
+                return <Redirect to={`${this.state.room.slice(this.state.room.indexOf("/rooms/"))}`}/>
+            }
             return <Redirect to='/'/>
         }
         return (

@@ -18,7 +18,7 @@ class App extends Component {
                 <Switch>
                     <PrivateRoute exact path={"/"}/>
                     {/*render={() => <AddPermissionView {...this.props}/>}*/}
-                    <Route  path={"/login"}  component={Login}/>
+                    <Route  path={"/login/"}  component={Login}/>
                     <Route  path={"/rooms"} render={()=>(<Home key={this.props.location}/>)}/>
                     {/*<Route  path={"/room/:room?"}  component={Menu}/>*/}
                 </Switch>

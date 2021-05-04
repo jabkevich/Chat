@@ -6,11 +6,6 @@ import  styles from "../styles/styles.scss"
 import { withRouter} from 'react-router-dom';
 
 export class Room extends Component {
-    constructor(props) {
-
-        super(props);
-
-    }
     state = {
         room: this.props.match.params.room,
         message: "",
@@ -66,7 +61,7 @@ const mapStateToProps = state=>{
     return{
         user: state.auth.user,
         messages: state.chats.messages,
-        exist_room: state.chats.exist_room
+        exist_room: state.chats.exist_room,
     }
 }
 

@@ -7,9 +7,16 @@ import Menu from "./Menu/Menu";
 import Room from "./MainScreen/Room"
 import Change from "./MainScreen/Change";
 export class Home extends Component {
+    constructor(props) {
+        super(props);
+    }
     render() {
         if (!this.props.isAuthenticated) {
-            return <Redirect push to='/'/>
+            console.log(this.props.location)
+            return <Redirect   to={{
+                pathname: "/login",
+                room: window.location.href
+            }}/>
         }
         return (
             <div className={styles.Home}>
